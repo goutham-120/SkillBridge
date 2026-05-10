@@ -7,7 +7,7 @@ const generateToken = (id) =>
 
 const signup = async (req, res) => {
   try {
-    const { name, email, password, role = "user" } = req.body;
+    const { name, email, password } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({ message: "Please provide name, email and password" });
@@ -21,7 +21,7 @@ const signup = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role: role === "admin" ? "admin" : "user",
+      role: "user",
     });
 
     return res.status(201).json({
@@ -40,7 +40,7 @@ const signup = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, role = "user" } = req.body;
     const user = await User.findOne({ email });
 
     if (!user) return res.status(400).json({ message: "Invalid credentials" });
@@ -48,6 +48,7 @@ const login = async (req, res) => {
 
     const isPasswordMatch = await bcrypt.compare(password, user.password);
     if (!isPasswordMatch) return res.status(400).json({ message: "Invalid credentials" });
+    if (role !== user.role) return res.status(403).json({ message: `Please login as ${user.role}` });
 
     return res.json({
       token: generateToken(user._id),

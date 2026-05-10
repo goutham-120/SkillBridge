@@ -108,6 +108,63 @@ button:hover {
   justify-content: center;
 }
 
+.landing-page {
+  max-width: 1180px;
+}
+
+.landing-hero {
+  align-items: center;
+  background: linear-gradient(135deg, #092b2f, #12363a 55%, #162945);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 28px;
+  grid-template-columns: 1.4fr 0.8fr;
+  min-height: 420px;
+  padding: 42px;
+}
+
+.landing-hero h1 {
+  font-size: 54px;
+}
+
+.landing-hero p {
+  font-size: 18px;
+  max-width: 620px;
+}
+
+.eyebrow,
+.landing-strip span {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.landing-panel {
+  background: rgba(7, 21, 22, 0.78);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 22px;
+}
+
+.landing-strip {
+  display: grid;
+  gap: 12px;
+  grid-template-columns: repeat(4, 1fr);
+  margin-top: 16px;
+}
+
+.landing-strip span {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+}
+
+.secondary-link {
+  background: #334155;
+}
+
 .auth-page {
   align-items: center;
   display: flex;
@@ -535,6 +592,20 @@ button:disabled {
 
   h1 {
     font-size: 32px;
+  }
+
+  .landing-hero,
+  .landing-strip {
+    grid-template-columns: 1fr;
+  }
+
+  .landing-hero {
+    min-height: auto;
+    padding: 28px;
+  }
+
+  .landing-hero h1 {
+    font-size: 38px;
   }
 
   .row input,

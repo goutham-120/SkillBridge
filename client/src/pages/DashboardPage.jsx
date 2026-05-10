@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import UserCard from "../components/UserCard";
 import RequestCard from "../components/RequestCard";
 import { getMatches } from "../services/userService";
@@ -72,8 +72,6 @@ function DashboardPage() {
   const [matches, setMatches] = useState([]);
   const [dashboard, setDashboard] = useState({ incoming: [], sent: [], active: [], scheduled: [] });
   const [pendingReviews, setPendingReviews] = useState([]);
-  const [topicInput, setTopicInput] = useState("");
-  const [matchFilter, setMatchFilter] = useState("");
   const [requestMessage, setRequestMessage] = useState("");
 
   const loadData = async () => {
@@ -93,30 +91,13 @@ function DashboardPage() {
 
   const handleSendRequest = async (receiverId) => {
     try {
-      await sendRequest(receiverId, topicInput);
-      setTopicInput("");
+      await sendRequest(receiverId, "");
       setRequestMessage("Request sent");
       loadData();
     } catch (error) {
       setRequestMessage(error.response?.data?.message || error.message || "Could not send request");
     }
   };
-
-  const filteredMatches = useMemo(() => {
-    const filter = matchFilter.trim().toLowerCase();
-    if (!filter) return matches;
-
-    return matches.filter((user) => {
-      const searchable = [
-        user.name,
-        user.email,
-        ...(user.matchedSkills || []),
-        ...(user.skillsOffered || []),
-      ].join(" ").toLowerCase();
-
-      return searchable.includes(filter);
-    });
-  }, [matchFilter, matches]);
 
   return (
     <section className="page dashboard-page">
@@ -132,28 +113,9 @@ function DashboardPage() {
         </div>
       </div>
 
-      <div className="topic-box">
-        <label htmlFor="topic">Topic for new requests</label>
-        <input
-          id="topic"
-          placeholder="Example: React basics"
-          value={topicInput}
-          onChange={(e) => setTopicInput(e.target.value)}
-        />
-        {requestMessage && (
-          <p className={requestMessage === "Request sent" ? "success" : "error"}>{requestMessage}</p>
-        )}
-      </div>
-
-      <div className="topic-box">
-        <label htmlFor="match-filter">Filter matches</label>
-        <input
-          id="match-filter"
-          placeholder="Search by name, email, or skill"
-          value={matchFilter}
-          onChange={(e) => setMatchFilter(e.target.value)}
-        />
-      </div>
+      {requestMessage && (
+        <p className={requestMessage === "Request sent" ? "success" : "error"}>{requestMessage}</p>
+      )}
 
       <DashboardSection title="Pending Reviews" count={pendingReviews.length} emptyText="No reviews waiting.">
         {pendingReviews.map((request) => (
@@ -169,8 +131,8 @@ function DashboardPage() {
         ))}
       </DashboardSection>
 
-      <DashboardSection title="Matched Users" count={filteredMatches.length} emptyText={matches.length ? "No matches fit this filter." : "No matches yet. Add skills in your profile."}>
-        {filteredMatches.map((user) => <UserCard key={user._id} user={user} onSendRequest={handleSendRequest} />)}
+      <DashboardSection title="Matched Users" count={matches.length} emptyText="No matches yet. Add skills in your profile.">
+        {matches.map((user) => <UserCard key={user._id} user={user} onSendRequest={handleSendRequest} />)}
       </DashboardSection>
 
       <DashboardSection title="Incoming Requests" count={dashboard.incoming.length} emptyText="No incoming requests.">
