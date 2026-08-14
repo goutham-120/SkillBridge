@@ -1,4 +1,5 @@
 import { Link, useNavigate } from "react-router-dom";
+import ThemeToggle from "./ThemeToggle";
 
 function Navbar({ user, onLogout }) {
   const navigate = useNavigate();
@@ -32,6 +33,7 @@ function Navbar({ user, onLogout }) {
             <Link to="/signup">Signup</Link>
           </>
         )}
+        <ThemeToggle />
       </div>
     </nav>
   );
